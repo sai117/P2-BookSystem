@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuny.demo.dao.RentDao" >
+    <resultMap id="BaseResultMap" type="com.tuny.demo.domain.RentDomain" >
+        <id column="id" property="id" />
+        <result column="id" property="id"/>
+        <result column="book_id" property="bookId"/>
+        <result column="rent_user" property="rentUser"/>
+        <result column="rent_time" property="rentTime"/>
+        <result column="back_time" property="backTime"/>
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ${alias}.id,${alias}.book_id,${alias}.rent_user,${alias}.rent_time,${alias}.back_time
+    </sql>
+    <select id="findById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"><property name="alias" value="tn_rent"/></include>
+        from tn_rent
+        where tn_rent.id = #{primaryKey}
+    </select>
+    <select id="find" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"><property name="alias" value="tn_rent"/></include>
+        from tn_rent
+        where 1=1 
+        <if test="id != null" >
+           AND tn_rent.id = #{id}
+        </if>
+        <if test="bookId != null" >
+           AND tn_rent.book_id = #{bookId}
+        </if>
+        <if test="rentUser != null" >
+           AND tn_rent.rent_user = #{rentUser}
+        </if>
+        <if test="rentTime != null" >
+           AND tn_rent.rent_time = #{rentTime}
+        </if>
+        <if test="backTime != null" >
+           AND tn_rent.back_time = #{backTime}
+        </if>
+    </select>
+
+    <insert id="insertAll">
+        INSERT ALL
+        <foreach collection="list" item="p" separator=" ">
+        into tn_rent
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="p.id != null" >
+                id,
+            </if>
+            <if test="p.bookId != null" >
+                book_id,
+            </if>
+            <if test="p.rentUser != null" >
+                rent_user,
+            </if>
+            <if test="p.rentTime != null" >
+                rent_time,
+            </if>
+            <if test="p.backTime != null" >
+                back_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="p.id != null" >
+                #{p.id},
+            </if>
+            <if test="p.bookId != null" >
+                #{p.bookId},
+            </if>
+            <if test="p.rentUser != null" >
+                #{p.rentUser},
+            </if>
+            <if test="p.rentTime != null" >
+                #{p.rentTime},
+            </if>
+            <if test="p.backTime != null" >
+                #{p.backTime},
+            </if>
+        </trim>
+        </foreach>
+        select 1 from dual
+    </insert>
+    
+    <insert id="insertAllMysql">
+
+            <foreach collection="list" item="p" separator=";">
+        insert into tn_rent
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="p.id != null" >
+                id,
+            </if>
+            <if test="p.bookId != null" >
+                book_id,
+            </if>
+            <if test="p.rentUser != null" >
+                rent_user,
+            </if>
+            <if test="p.rentTime != null" >
+                rent_time,
+            </if>
+            <if test="p.backTime != null" >
+                back_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="p.id != null" >
+                #{p.id},
+            </if>
+            <if test="p.bookId != null" >
+                #{p.bookId},
+            </if>
+            <if test="p.rentUser != null" >
+                #{p.rentUser},
+            </if>
+            <if test="p.rentTime != null" >
+                #{p.rentTime},
+            </if>
+            <if test="p.backTime != null" >
+                #{p.backTime},
+            </if>
+        </trim>
+        </foreach>
+    </insert>
+    <insert id="insert">
+        insert into tn_rent
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="bookId != null" >
+                book_id,
+            </if>
+            <if test="rentUser != null" >
+                rent_user,
+            </if>
+            <if test="rentTime != null" >
+                rent_time,
+            </if>
+            <if test="backTime != null" >
+                back_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id},
+            </if>
+            <if test="bookId != null" >
+                #{bookId},
+            </if>
+            <if test="rentUser != null" >
+                #{rentUser},
+            </if>
+            <if test="rentTime != null" >
+                #{rentTime},
+            </if>
+            <if test="backTime != null" >
+                #{backTime},
+            </if>
+        </trim>
+    </insert>
+    <update id="update">
+        update tn_rent
+        <set>
+            <if test="id != null" >
+                id = #{id},
+            </if>
+            <if test="bookId != null" >
+                book_id = #{bookId},
+            </if>
+            <if test="rentUser != null" >
+                rent_user = #{rentUser},
+            </if>
+            <if test="rentTime != null" >
+                rent_time = #{rentTime},
+            </if>
+            <if test="backTime != null" >
+                back_time = #{backTime},
+            </if>
+        </set>
+        <if test="id == null" >
+            where id = #{primaryKey}
+        </if>
+        <if test="id != null" >
+            where id = #{id}
+        </if>
+    </update>
+    <delete id="delete" >
+        delete from tn_rent
+        where id = #{primaryKey}
+    </delete>
+</mapper>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuny.demo.dao.UserDao" >
+    <resultMap id="BaseResultMap" type="com.tuny.demo.domain.UserDomain" >
+        <id column="id" property="id" />
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="type" property="type"/>
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ${alias}.id,${alias}.username,${alias}.password,${alias}.type
+    </sql>
+    <select id="findById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"><property name="alias" value="tn_user"/></include>
+        from tn_user
+        where tn_user.id = #{primaryKey}
+    </select>
+    <select id="find" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"><property name="alias" value="tn_user"/></include>
+        from tn_user
+        where 1=1 
+        <if test="id != null" >
+           AND tn_user.id = #{id}
+        </if>
+        <if test="username != null" >
+           AND tn_user.username = #{username}
+        </if>
+        <if test="password != null" >
+           AND tn_user.password = #{password}
+        </if>
+        <if test="type != null" >
+           AND tn_user.type = #{type}
+        </if>
+    </select>
+
+    <insert id="insertAll">
+        INSERT ALL
+        <foreach collection="list" item="p" separator=" ">
+        into tn_user
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="p.id != null" >
+                id,
+            </if>
+            <if test="p.username != null" >
+                username,
+            </if>
+            <if test="p.password != null" >
+                password,
+            </if>
+            <if test="p.type != null" >
+                type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="p.id != null" >
+                #{p.id},
+            </if>
+            <if test="p.username != null" >
+                #{p.username},
+            </if>
+            <if test="p.password != null" >
+                #{p.password},
+            </if>
+            <if test="p.type != null" >
+                #{p.type},
+            </if>
+        </trim>
+        </foreach>
+        select 1 from dual
+    </insert>
+    
+    <insert id="insertAllMysql">
+
+            <foreach collection="list" item="p" separator=";">
+        insert into tn_user
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="p.id != null" >
+                id,
+            </if>
+            <if test="p.username != null" >
+                username,
+            </if>
+            <if test="p.password != null" >
+                password,
+            </if>
+            <if test="p.type != null" >
+                type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="p.id != null" >
+                #{p.id},
+            </if>
+            <if test="p.username != null" >
+                #{p.username},
+            </if>
+            <if test="p.password != null" >
+                #{p.password},
+            </if>
+            <if test="p.type != null" >
+                #{p.type},
+            </if>
+        </trim>
+        </foreach>
+    </insert>
+    <insert id="insert">
+        insert into tn_user
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="username != null" >
+                username,
+            </if>
+            <if test="password != null" >
+                password,
+            </if>
+            <if test="type != null" >
+                type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id},
+            </if>
+            <if test="username != null" >
+                #{username},
+            </if>
+            <if test="password != null" >
+                #{password},
+            </if>
+            <if test="type != null" >
+                #{type},
+            </if>
+        </trim>
+    </insert>
+    <update id="update">
+        update tn_user
+        <set>
+            <if test="id != null" >
+                id = #{id},
+            </if>
+            <if test="username != null" >
+                username = #{username},
+            </if>
+            <if test="password != null" >
+                password = #{password},
+            </if>
+            <if test="type != null" >
+                type = #{type},
+            </if>
+        </set>
+        <if test="id == null" >
+            where id = #{primaryKey}
+        </if>
+        <if test="id != null" >
+            where id = #{id}
+        </if>
+    </update>
+    <delete id="delete" >
+        delete from tn_user
+        where id = #{primaryKey}
+    </delete>
+</mapper>

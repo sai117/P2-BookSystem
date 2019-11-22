@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuny.demo.dao.RentDao">
+    <sql id="Extend_Column_List">
+         ${alias}.id, ${alias}.book_id, ${alias}.rent_user, ${alias}.rent_time, ${alias}.back_time
+    </sql>
+
+    <select id="rentList" resultType="com.tuny.demo.vo.rent.RentOutVo">
+        select id bookId,rent_user userId,rent_time,back_time
+        from tn_rent
+        where tn_rent.book_id = #{bookId}
+    </select>
+
+    <delete id="deleteRent">
+        delete  from tn_rent where tn_rent.book_id = #{id}
+    </delete>
+</mapper>

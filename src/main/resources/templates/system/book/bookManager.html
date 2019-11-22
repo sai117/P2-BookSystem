@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>图书管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="/resources/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="/resources/css/public.css" media="all"/>
+</head>
+<body class="childrenBody">
+<blockquote class="layui-elem-quote" style="text-align: center;height: 70px">
+
+    <!--id和lay-filter相同即可-->
+    <form action="" method="get" id="searchForm" lay-filter="searchForm" class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">图书名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="bookName" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">开始时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="startDate" id="startDate" placeholder="yyyy-MM-dd HH:mm:ss"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">结束日期</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="endDate" id="endDate" placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <button type="button" class="layui-btn layui-btn-radius layui-btn-danger" lay-submit=""
+                        lay-filter="doSearch"><i class="layui-icon layui-icon-search">查询</i></button>
+                <button type="reset" class="layui-btn layui-btn-normal layui-btn-radius"><i
+                        class="layui-icon layui-icon-refresh-3">重置</i></button>
+            </div>
+        </div>
+    </form>
+</blockquote>
+<!--数据表格开始-->
+<!--数据表格开始-->
+<div>
+    <!--隐藏-->
+    <table class="layui-hide" id="bookTable" lay-filter="bookTable"></table>
+
+</div>
+<!--头部工具栏-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-inline">
+        <div class="layui-btn-container">
+            <button type="button" class="layui-btn layui-btn-radius layui-btn-danger" lay-event="getCheckData">
+                <i class="layui-icon layui-icon-delete">批量删除</i></button>
+            <button type="button" class="layui-btn layui-btn-radius layui-btn-danger" lay-event="add">
+                <i class="layui-icon layui-icon-add-1">添加</i></button>
+<!--            <button type="button" class="layui-btn layui-btn-radius layui-btn-danger" lay-event="writeExcel">-->
+<!--                <i class="layui-icon layui-icon-delete">批量导出</i></button>-->
+
+        </div>
+    </div>
+</script>
+<script type="text/html" id="barDemo">
+    <button class="layui-btn layui-btn-xs layui-btn-danger layui-btn-radius" lay-event="edit"><i
+            class="layui-icon layui-icon-edit"> 修改</i></button>
+    <button class="layui-btn layui-btn-xs layui-btn-danger layui-btn-radius" lay-event="del"><i
+            class="layui-icon layui-icon-delete"> 删除</i></button>
+    <button class="layui-btn layui-btn-xs layui-btn-danger layui-btn-radius" lay-event="rent"><i
+            class="layui-icon layui-icon-edit"> 租借</i></button>
+    <button class="layui-btn layui-btn-xs layui-btn-danger layui-btn-radius" lay-event="detail"><i
+            class="layui-icon layui-icon-edit"> 详情</i></button>
+
+</script>
+<!--数据表格结束-->
+<!--查询条件结束-->
+<!--添加层开始-->
+<div id="addOrUpdateDiv" style="display: none;padding: 15px">
+    <form id="dataForm" lay-filter="dataForm" class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <label class="layui-form-label">图书名</label>
+            <div class="layui-input-block">
+                <input type="text" name="bookName" lay-verify="required" autocomplete="off" placeholder="请输入图书名"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">图书作者</label>
+            <div class="layui-input-block">
+                <input type="text" name="author" lay-verify="required" autocomplete="off" placeholder="请输入图书作者"
+                       class="layui-input">
+            </div>
+        </div>
+        <input type="hidden" id="id" name="id">
+        <div class="layui-form-item">
+            <label class="layui-form-label">图书简介</label>
+            <div class="layui-input-block">
+                <input type="text" name="description"  autocomplete="off" placeholder="请输入图书简介"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">出版社</label>
+            <div class="layui-input-block">
+                <input type="text" name="publisher" lay-verify="required" autocomplete="off" placeholder="请输入出版社"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-upload">
+            <button type="button" class="layui-btn" id="test1">上传图片</button>
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="demo1">
+                <p id="demoText"></p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">库存</label>
+            <div class="layui-inline">
+                <input type="text" name="stock" placeholder="请输入图书库存" lay-verify="required|number"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <!--工具栏-->
+        <div class="layui-form-item" style="text-align: center">
+            <button type="button" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="doSubmit" >提交</button>
+            <button type="reset" class="layui-btn layui-btn-normal layui-btn-radius">重置</button>
+        </div>
+
+    </form>
+</div>
+<!--添加层结束-->
+<!--借书窗口开始-->
+<div id="rentDiv" style="display: none;padding: 15px">
+    <form id="rentForm" lay-filter="rentForm" class="layui-form layui-form-pane">
+        <input type="hidden" id="bookId" name="bookId">
+
+        <div class="layui-inline">
+            <label class="layui-form-label">开始时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="rentTime" id="rentTime"  lay-verify="required" placeholder="yyyy-MM-dd HH:mm:ss"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">结束日期</label>
+            <div class="layui-input-inline">
+                <input type="tel" name="backTime" id="backTime"  lay-verify="required"  placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <!--工具栏-->
+        <br><br><br>
+        <div class="layui-form-item" style="text-align: center">
+            <button type="button" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="doRent" >租借</button>
+            <button type="reset" class="layui-btn layui-btn-normal layui-btn-radius">重置</button>
+        </div>
+
+    </form>
+</div>
+<!--借书窗口结束-->
+<script type="text/javascript" src="/resources/layui/layui.js"></script>
+<script type="text/javascript" src="/resources/layui/time.js"></script>
+<script>
+    //引入组件
+    layui.use(['form', 'jquery', 'layer', 'laydate', 'table', 'upload'], function () {
+        //引入实例
+        var form = layui.form;
+        var upload = layui.upload;
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+        var table = layui.table;
+        //初始化时间组件
+        laydate.render({
+            elem: '#startDate',
+            type: 'datetime'
+        });
+        laydate.render({
+            elem: '#endDate',
+            type: 'datetime',
+
+        });
+        laydate.render({
+            elem: '#backTime',
+            type: 'datetime'
+        });
+        laydate.render({
+            elem: '#rentTime',
+            type: 'datetime',
+            min:minDate()
+        });
+
+        // 设置最小可选的日期
+        function minDate(){
+            var now = new Date();
+            return now.getFullYear()+"-" + (now.getMonth()+1) + "-" + now.getDate();
+        }
+
+        var uploadInst = upload.render({
+            elem: '#test1'
+            // , url: '/upload/'
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result).attr("style", "width:200px;height:auto;"); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败,因为我还没做图片上传，只是回显</span> ');
+                // demoText.find('.demo-reload').on('click', function () {
+                //     uploadInst.upload();
+                // });
+            }
+        });
+
+
+        var tableInsBook = table.render({
+            elem: '#bookTable'
+            , url: '/sys/book'
+            , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                title: '提示'
+                , layEvent: 'LAYTABLE_TIPS'
+                , icon: 'layui-icon-tips'
+            }]
+            , title: '数据表'
+            , cellMinWidth: 80
+            , cols: [ [
+                // width属性去掉 自动居中 align: 'center'字段居中
+                {type: 'checkbox', fixed: 'left'},
+                {field: 'id', title: 'ID', align: 'center', sort: true}
+                , {field: 'bookName', title: '书名', align: 'center', width: '25%'}
+                , {field: 'author', title: '作者', align: 'center', width: '15%'}
+                , {field: 'image', title: '封面图', align: 'center', width: '20%',templet:'<div><img src="/resources/images/face.jpg" style="height: 27px"></div>'}
+                , {field: 'publisher', title: '出版社', align: 'center', sort: true, width: '15%'}
+                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barDemo', width: '15%'}
+            ] ]
+            , page: true
+            , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "data": res.data, //解析数据列表
+                    "count": res.page.total
+                };
+            }
+            , done: function (res) {
+                // 隐藏列
+                $("bookTable").css("width", "100%");
+                $(".layui-table-box").find("[data-field='id']").css("display", "none");
+                console.log(res);
+                if (res.data.length == 0 && res.count != 0) {
+                    table.reload('bookTable', {
+                        page: {
+                            curr: 1
+                        }
+                    });
+                }
+            }
+        });
+
+        //头工具栏事件
+        table.on('toolbar(bookTable)', function (obj) {
+            switch (obj.event) {
+                case 'getCheckData':
+                    getCheckData();
+                    break;
+                case 'add':
+                    addBook();
+                    break;
+
+                case 'writeExcel':
+                    var data = table.checkStatus('bookTable').data;
+                    var ids = new Array();
+                    for (var i = 0; i < data.length; i++) {
+                        ids.push(data[i].id);
+                    }
+                    if (data.length === 0) {
+                        layer.msg('请选择一行');
+                    } else {
+                        window.location.href = '/sys/book-list-export?ids=' + ids;
+                    }
+                    break;
+            }
+
+        });
+        var mainIndex;
+
+        //打开添加的弹出层
+        function addBook() {
+            $("#dataForm")[0].reset();
+            $("#id").val('');
+            $("#demo1").val('');
+            $("#demoText").val('');
+            mainIndex = layer.open({
+                type: 1,
+                content: $("#addOrUpdateDiv"),
+                area: ['800px', '600px'],
+                title: '发布图书',
+            })
+        };
+
+
+        function rentBook(data) {
+            $("#rentForm")[0].reset();
+            $("#bookId").val(data.id);
+            mainIndex = layer.open({
+                type: 1,
+                content: $("#rentDiv"),
+                area: ['400px', '400px'],
+                title: '租借图书',
+                success: function () {
+                    form.val("rentForm", data);
+                    // layedit.setContent(editIndex, data.content);
+                }
+            })
+        }
+
+        //打开修改弹出层
+        function editBook(data) {
+            $("#dataForm")[0].reset();
+            console.log(data);
+            mainIndex = layer.open({
+                type: 1,
+                content: $("#addOrUpdateDiv"),
+                area: ['800px', '600px'],
+                title: '修改图书',
+                success: function () {
+                    form.val("dataForm", data);
+                    // layedit.setContent(editIndex, data.content);
+                }
+            })
+        };
+        //模糊查询
+        form.on("submit(doSearch)", function (data) {
+            tableInsBook.reload({
+                //默认路径可以不写
+                url: '/sys/book',
+                where: data.field,
+                page: {
+                    curr: 1
+                }
+            })
+            return false;
+        });
+
+        form.on("submit(doRent)", function (data) {
+            var data = $("#rentForm").serialize();
+            $.post('/sys/rent', data, function (res) {
+                if (res.code == 0) {
+                    tableInsBook.reload();
+                    layer.close(mainIndex);
+                } else {
+                    layer.msg(res.msg);
+                }
+            })
+        });
+
+        //提交事件
+        form.on("submit(doSubmit)", function (data) {
+            var data = $("#dataForm").serialize();
+            $.post('/sys/book', data, function (res) {
+                if (res.code == 0) {
+                    tableInsBook.reload();
+                    layer.close(mainIndex);
+                } else {
+                    layer.msg(res.msg);
+                }
+            })
+        });
+
+        //单个删除
+        table.on('tool(bookTable)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            switch (obj.event) {
+                case 'del':
+                    deleteBook(data.id);
+                    break;
+                case 'edit':
+                    editBook(data);
+                    break;
+                case 'rent':
+                    rentBook(data);
+                    break;
+                case 'detail':
+                    detailBook(data);
+            }
+        })
+
+        function detailBook(data) {
+            //分页展示借书记录
+
+                var index = layui.layer.open({
+                    title: "图书借阅详情",
+                    type: 2,
+                    content: "/sys/toRentList?bookId=" + data.id,
+                    success: function (layero, index) {
+                        setTimeout(function () {
+                            layui.layer.tips('点击此处返回', '.layui-layer-setwin .layui-layer-close', {
+                                tips: 3
+                            });
+                        }, 500);
+                    }
+                });
+                layui.layer.full(index);
+
+        }
+
+        function deleteBook(data) {
+            layer.confirm('你确定要删除这条数据吗?', {icon: 3, title: '提示'}, function (index) {
+                var ids = new Array();
+                ids.push(data);
+                $.ajax({
+                    url: '/sys/book',
+                    type: 'DELETE',
+                    data: {ids: ids + ""},
+                    success: function (res) {
+                        if (res.code == 0) {
+                            table.reload('bookTable', {});
+                        } else {
+                            layer.msg(res.msg);
+                        }
+                    }
+                });
+                layer.close(index);
+            });
+        }
+
+        //批量删除
+        function getCheckData() {
+            var data = table.checkStatus('bookTable').data;
+            var ids = new Array();
+            for (var i = 0; i < data.length; i++) {
+                ids.push(data[i].id);
+            }
+            if (data.length === 0) {
+                layer.msg('请选择一行');
+            } else {
+                layer.confirm("真的删除选中信息吗?", function (delIndex) {
+                    $.ajax({
+                        url: '/sys/book',
+                        type: 'DELETE',
+                        data: {ids: ids + ""},
+                        dataType: "json",
+                        success: function (res) {
+                            if (res.code == 0) {
+                                table.reload('bookTable', {});
+                            } else {
+                                layer.msg(res.msg);
+                            }
+                        }
+                    });
+                    layer.close(delIndex)
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>

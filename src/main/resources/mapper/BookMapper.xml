@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuny.demo.dao.BookDao" >
+    <resultMap id="BaseResultMap" type="com.tuny.demo.domain.BookDomain" >
+        <id column="id" property="id" />
+        <result column="id" property="id"/>
+        <result column="author" property="author"/>
+        <result column="image" property="image"/>
+        <result column="publisher" property="publisher"/>
+        <result column="stock" property="stock"/>
+        <result column="description" property="description"/>
+        <result column="date_created" property="dateCreated"/>
+        <result column="book_name" property="bookName"/>
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ${alias}.id,${alias}.author,${alias}.image,${alias}.publisher,${alias}.stock,${alias}.description,${alias}.date_created,${alias}.book_name
+    </sql>
+    <select id="findById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"><property name="alias" value="tn_book"/></include>
+        from tn_book
+        where tn_book.id = #{primaryKey}
+    </select>
+    <select id="find" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"><property name="alias" value="tn_book"/></include>
+        from tn_book
+        where 1=1
+        <if test="id != null" >
+            AND tn_book.id = #{id}
+        </if>
+        <if test="author != null" >
+            AND tn_book.author = #{author}
+        </if>
+        <if test="image != null" >
+            AND tn_book.image = #{image}
+        </if>
+        <if test="publisher != null" >
+            AND tn_book.publisher = #{publisher}
+        </if>
+        <if test="stock != null" >
+            AND tn_book.stock = #{stock}
+        </if>
+        <if test="description != null" >
+            AND tn_book.description = #{description}
+        </if>
+        <if test="dateCreated != null" >
+            AND tn_book.date_created = #{dateCreated}
+        </if>
+        <if test="bookName != null" >
+            AND tn_book.book_name = #{bookName}
+        </if>
+    </select>
+
+    <insert id="insertAll">
+        INSERT ALL
+        <foreach collection="list" item="p" separator=" ">
+            into tn_book
+            <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="p.id != null" >
+                    id,
+                </if>
+                <if test="p.author != null" >
+                    author,
+                </if>
+                <if test="p.image != null" >
+                    image,
+                </if>
+                <if test="p.publisher != null" >
+                    publisher,
+                </if>
+                <if test="p.stock != null" >
+                    stock,
+                </if>
+                <if test="p.description != null" >
+                    description,
+                </if>
+                <if test="p.dateCreated != null" >
+                    date_created,
+                </if>
+                <if test="p.bookName != null" >
+                    book_name,
+                </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="p.id != null" >
+                    #{p.id},
+                </if>
+                <if test="p.author != null" >
+                    #{p.author},
+                </if>
+                <if test="p.image != null" >
+                    #{p.image},
+                </if>
+                <if test="p.publisher != null" >
+                    #{p.publisher},
+                </if>
+                <if test="p.stock != null" >
+                    #{p.stock},
+                </if>
+                <if test="p.description != null" >
+                    #{p.description},
+                </if>
+                <if test="p.dateCreated != null" >
+                    #{p.dateCreated},
+                </if>
+                <if test="p.bookName != null" >
+                    #{p.bookName},
+                </if>
+            </trim>
+        </foreach>
+        select 1 from dual
+    </insert>
+
+    <insert id="insertAllMysql">
+
+        <foreach collection="list" item="p" separator=";">
+            insert into tn_book
+            <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="p.id != null" >
+                    id,
+                </if>
+                <if test="p.author != null" >
+                    author,
+                </if>
+                <if test="p.image != null" >
+                    image,
+                </if>
+                <if test="p.publisher != null" >
+                    publisher,
+                </if>
+                <if test="p.stock != null" >
+                    stock,
+                </if>
+                <if test="p.description != null" >
+                    description,
+                </if>
+                <if test="p.dateCreated != null" >
+                    date_created,
+                </if>
+                <if test="p.bookName != null" >
+                    book_name,
+                </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="p.id != null" >
+                    #{p.id},
+                </if>
+                <if test="p.author != null" >
+                    #{p.author},
+                </if>
+                <if test="p.image != null" >
+                    #{p.image},
+                </if>
+                <if test="p.publisher != null" >
+                    #{p.publisher},
+                </if>
+                <if test="p.stock != null" >
+                    #{p.stock},
+                </if>
+                <if test="p.description != null" >
+                    #{p.description},
+                </if>
+                <if test="p.dateCreated != null" >
+                    #{p.dateCreated},
+                </if>
+                <if test="p.bookName != null" >
+                    #{p.bookName},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+    <insert id="insert">
+        insert into tn_book
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="author != null" >
+                author,
+            </if>
+            <if test="image != null" >
+                image,
+            </if>
+            <if test="publisher != null" >
+                publisher,
+            </if>
+            <if test="stock != null" >
+                stock,
+            </if>
+            <if test="description != null" >
+                description,
+            </if>
+            <if test="dateCreated != null" >
+                date_created,
+            </if>
+            <if test="bookName != null" >
+                book_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id},
+            </if>
+            <if test="author != null" >
+                #{author},
+            </if>
+            <if test="image != null" >
+                #{image},
+            </if>
+            <if test="publisher != null" >
+                #{publisher},
+            </if>
+            <if test="stock != null" >
+                #{stock},
+            </if>
+            <if test="description != null" >
+                #{description},
+            </if>
+            <if test="dateCreated != null" >
+                #{dateCreated},
+            </if>
+            <if test="bookName != null" >
+                #{bookName},
+            </if>
+        </trim>
+    </insert>
+    <update id="update">
+        update tn_book
+        <set>
+            <if test="id != null" >
+                id = #{id},
+            </if>
+            <if test="author != null" >
+                author = #{author},
+            </if>
+            <if test="image != null" >
+                image = #{image},
+            </if>
+            <if test="publisher != null" >
+                publisher = #{publisher},
+            </if>
+            <if test="stock != null" >
+                stock = #{stock},
+            </if>
+            <if test="description != null" >
+                description = #{description},
+            </if>
+            <if test="dateCreated != null" >
+                date_created = #{dateCreated},
+            </if>
+            <if test="bookName != null" >
+                book_name = #{bookName},
+            </if>
+        </set>
+        <if test="id == null" >
+            where id = #{primaryKey}
+        </if>
+        <if test="id != null" >
+            where id = #{id}
+        </if>
+    </update>
+    <delete id="delete" >
+        delete from tn_book
+        where id = #{primaryKey}
+    </delete>
+</mapper>

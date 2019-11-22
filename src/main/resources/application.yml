@@ -1,0 +1,64 @@
+
+server:
+  port: 8080
+  tomcat:
+    uri-encoding: UTF-8
+
+# \u7CFB\u7EDF\u5E38\u91CF\u914D\u7F6E
+constant:
+  # \u96EA\u82B1ID\u751F\u6210\u5668-\u5DE5\u4F5C\u673A\u5668ID
+  work-id: 1
+  # \u96EA\u82B1ID\u751F\u6210\u5668-\u6570\u636E\u4E2D\u5FC3ID
+  data-center-id: 1
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  thymeleaf:
+    cache: false
+    mode: LEGACYHTML5
+    encoding: UTF-8
+    check-template-location: true
+    content-type: text/html
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/book?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle:
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictionRunsMillis: 300000
+    validationQuery: select \u2018x\u2018
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+
+mybatis:
+  mapper-locations: classpath*:mapper/**/*.xml
+  pagehelper:
+    helperDialect: mysql
+    #helperDialect: sqlserver
+    #页码<=0 查询第一页，页码>=总页数查询最后一页
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
+    returnPageInfo: check
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    web:
+      debug
+    com:
+      tuny:
+        demo:
+          dao: debug

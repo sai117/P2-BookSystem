@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuny.demo.dao.UserDao">
+    <sql id="Extend_Column_List">
+         ${alias}.id, ${alias}.username, ${alias}.password, ${alias}.type
+    </sql>
+    <!-- 示例 -->
+
+    <select id="login" resultType="com.tuny.demo.domain.UserDomain">
+        select
+        <include refid="Base_Column_List">
+            <property name="alias" value="tn_user"/>
+        </include>
+        from tn_user
+        <where>
+            <if test="username != null">
+                AND tn_user.username = #{username}
+            </if>
+        </where>
+    </select>
+</mapper>

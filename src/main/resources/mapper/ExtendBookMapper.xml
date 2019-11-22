@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuny.demo.dao.BookDao">
+    <sql id="Extend_Column_List">
+         ${alias}.id, ${alias}.author, ${alias}.image, ${alias}.publisher, ${alias}.stock, ${alias}.description, ${alias}.date_created, ${alias}.book_name
+    </sql>
+    <!-- 示例 -->
+
+    <select id="bookList" resultType="com.tuny.demo.vo.book.BookOutVo">
+        select id,author,image,publisher,book_name bookName,stock,description
+        from tn_book
+        <where>
+            <if test="bookName != null and bookName!='' ">
+                and tn_book.book_name = #{bookName}
+            </if>
+            <if test="startDate!=null ">
+                and tn_book.date_created >= #{startDate}
+            </if>
+            <if test="endDate!=null ">
+                and #{endDate}>= tn_book.date_created
+            </if>
+        </where>
+        order by date_created DESC
+    </select>
+</mapper>
